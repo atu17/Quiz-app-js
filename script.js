@@ -74,21 +74,34 @@ function showQuestion()  {
 
   number.textContent = currentQuestionIndex + 1 ;
   const quiz = quizzes[currentQuestionIndex];
+  const shuffledChoices = shuffle([...quiz.choices]);
   questionText.textContent = quiz.question;
-  for ( let i = 0; i < quiz.choices.length ;i++ ) {
+  for ( let i = 0; i < shuffledChoices.length ;i++ ) {
     const button = document.createElement("button");
-    button.textContent = quiz.choices[i];
+    button.textContent = shuffledChoices[i];
     button.addEventListener("click",() => {
       nextButton.disabled = false;
        const buttons = choiceArea.querySelectorAll("button");
        for ( let j = 0; j < buttons.length; j++){
         buttons[j].disabled = true;
        }
-       if ( quiz.answer === quiz.choices[i] ) {
+       if ( quiz.answer === shuffledChoices[i] ) {
           answerMessage.textContent = "正解！ " + quiz.explanation;
           score++;
-  } else {
-    answerMessage.textContent = "不正解！ " + quiz.explanation;
+
+          button.classList.add("correct");
+
+      } else {
+
+          for (let j = 0; j < buttons.length; j++) {
+          if(buttons[j].textContent === quiz.answer) {
+            buttons[j].classList.add("correct");
+          }
+        }
+
+          answerMessage.textContent = "不正解！ " + quiz.explanation;
+          button.classList.add("incorrect");
+
   } 
 });
     choiceArea.appendChild(button);
